@@ -10,12 +10,12 @@ using namespace std;
 
 vector<int> graph[MAX_N + 1];
 
-int get_count(int start_v) {
+int get_count(int start_v, int n = MAX_N) {
     queue<int> container;
     int answer = 0;
 
-    bool visited[MAX_N + 1];
-    for(int i = 0; i <= MAX_N; i++) visited[i] = false;
+    bool visited[n + 1];
+    for(int i = 1; i <= n; i++) visited[i] = false;
 
     container.push(start_v);
     visited[start_v] = true;
@@ -51,7 +51,7 @@ int main() {
     vector<int> results(n);
 
     for(int i = 0; i < n; i++) {
-        results[i] = get_count(i + 1);
+        results[i] = get_count(i + 1, n);
     }
 
     int max_val = (*max_element(results.begin(), results.end()));
