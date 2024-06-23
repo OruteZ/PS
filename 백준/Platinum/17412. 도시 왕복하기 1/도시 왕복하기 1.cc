@@ -18,33 +18,27 @@
 #define ENDL '\n'
 #define INF 2147483647
 
-using namespace std;
 
 
 #define MAX_N 400
 
-vector<vector<int>> graph;
-int flow[MAX_N + 1][MAX_N + 1];
-int capacity[MAX_N + 1][MAX_N + 1];
-bool visited[400] = {false,};
+class MaximumFlowProbSolver {
+private:
+    int size{};
+    std::vector<std::vector<int>> graph;
+    std::vector<std::vector<int>> flow;
+    std::vector<std::vector<int>> capacity;
+    std::vector<int> from;
 
-void print_vec(vector<int> vec) {
-    PRINT_LINE;
-    for(int i : vec) std::cout << i << ' ';
-    std::cout << ENDL;
-    PRINT_LINE;
-}
+    static void resize_2d(std::vector<std::vector<int>>& vec, int n, int m) {
+        vec.resize(n);
+        for(std::vector<int>& v : vec) v.resize(m);
+    }
 
-
-int maximum_flow(int source, int sink) {
-    int ret = 0;
-
-    vector<int> from(MAX_N + 1);
-
-    while(true) {
+    void single_flow(int source, int sink) {
         for(int& i : from) i = -1;
 
-        queue<int> container;
+        std::queue<int> container;
         from[source] = source;
         container.push(source);
 
@@ -61,54 +55,65 @@ int maximum_flow(int source, int sink) {
                     from[next] = cur;
                 }
             }
-
-
         }
+    }
+public:
+    void init(int new_size) {
+        this->size = new_size;
 
-        if(from[sink] == -1) break; // no more
-
-        int amount = INF;
-        for(int iter = sink; iter != source; iter = from[iter]) {
-            amount = min(amount, capacity[from[iter]][iter] - flow[from[iter]][iter]);
-        }
-
-        for(int iter = sink; iter != source; iter = from[iter]) {
-            flow[from[iter]][iter] += amount;
-            flow[iter][from[iter]] -= amount;
-        }
-
-        ret += amount;
+        graph.resize(new_size);
+        from.resize(new_size);
+        resize_2d(flow, new_size, new_size);
+        resize_2d(capacity, new_size, new_size);
+    }
+    explicit MaximumFlowProbSolver(int size) {
+        init(size);
     }
 
-    return ret;
-}
+    int solve(int source, int sink) {
+        int ret = 0;
+        while(true) {
+            single_flow(source, sink);
 
-void resize_2D(vector<vector<int>>& vec, int size) {
-    vec.resize(size);
-    for(int i = 0; i < size; i++) {
-        vec[i].resize(size);
+            if(from[sink] == -1) break; // no more
+
+            int amount = 2147483647;
+            for(int iter = sink; iter != source; iter = from[iter]) {
+                amount = std::min(amount, capacity[from[iter]][iter] - flow[from[iter]][iter]);
+            }
+
+            for(int iter = sink; iter != source; iter = from[iter]) {
+                flow[from[iter]][iter] += amount;
+                flow[iter][from[iter]] -= amount;
+            }
+
+            ret += amount;
+        }
+
+        return ret;
     }
-}
 
+    void input();
+};
 
-
-int main() {
-    FAST_IO;
-
-    int n, p;
-    cin >> n >> p;
-
-    resize_2D(graph, n + 1);
-
-    int u,v;
+void MaximumFlowProbSolver::input() {
+    int p; std::cin >> p;
+    int u, v;
     REPEAT(p) {
-        cin >> u >> v;
+        std::cin >> u >> v;
         graph[u].emplace_back(v);
         graph[v].emplace_back(u);
 
         capacity[u][v]++;
-//        capacity[v][u]++;
     }
+}
 
-    cout << maximum_flow(1, 2);
+int main() {
+    FAST_IO;
+
+    int n; std::cin >> n;
+    MaximumFlowProbSolver solver(n + 1);
+    solver.input();
+
+    std::cout << solver.solve(1, 2);
 }
