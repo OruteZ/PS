@@ -49,7 +49,7 @@ int dp_formula_F(int num, vector<int>& sales) {
         no_one += recursion(child, false, sales);
     }
     
-    // 한명은 해야지
+    // 참여 비용이 가장 싼 한명은 해야지
     if(ret == no_one && !graph[num].empty()) {
         int some_one_value = INT_MAX;
             
