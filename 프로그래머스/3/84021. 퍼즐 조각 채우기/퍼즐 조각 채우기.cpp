@@ -69,6 +69,7 @@ void bfs(vector<vector<pos>>& target,
          pos start, int filled_n) {
     
     queue<pos> container;
+    
     vector<pos> result;
     
     container.push(start);
