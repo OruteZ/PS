@@ -9,7 +9,6 @@ using namespace std;
 
 map<string, vector<pair<string, int>>> graph;
 map<int, bool> visited;
-vector<vector<string>> Tickets;
 int T_length;
 
 void build_graph(vector<vector<string>>& tickets) {
@@ -54,7 +53,6 @@ bool try_dfs(string start, int edge_num, vector<string>& answer, int stk = 0) {
 vector<string> solution(vector<vector<string>> tickets) {
     vector<string> answer;
     
-    Tickets = tickets;
     T_length = tickets.size();
     
     build_graph(tickets);
