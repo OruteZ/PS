@@ -1,6 +1,6 @@
 # [level 3] 퍼즐 조각 채우기 - 84021 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/84021#qna) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/84021?language=cpp) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 07월 11일 05:30:39
+2024년 07월 11일 22:45:20
 
 ### 문제 설명
 
