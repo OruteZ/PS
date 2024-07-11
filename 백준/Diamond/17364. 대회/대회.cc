@@ -26,12 +26,6 @@ using namespace std;
 int N, K;
 vector<PII> Contests;
 multiset<int> Blocked;
-map<PII, bool> Has_Blocked;
-
-//bool is_blockable(int a) {
-//    //Contests직선이 a 점 위에서 K회 이상 중첩되었다면 false 반환
-//
-//}
 
 // 해당 cont를 막습니다
 bool block_single(PII& cont) {
@@ -45,27 +39,16 @@ bool block_single(PII& cont) {
     return true;
 }
 
-void block() {
-    for(auto& cont : Contests) {
-        if(block_single(cont)) {
-            Has_Blocked[cont] = true;
-        }
-    }
-}
-
 int participate() {
     int last_fin = -1;
     int ret = 0;
     for(auto& cont : Contests) {
         if(last_fin >= cont.first) continue;
+        if(block_single(cont)) continue;
 
-        if(block_single(cont)) {
-            Has_Blocked[cont] = true;
-        } else if(cont.first > last_fin) {
+        if(cont.first > last_fin) {
             ret++;
             last_fin = cont.second;
-
-            //if(DEBUG) cout << "part : " << cont.first << ' ' << cont.second << endl;
         }
     }
     return ret;
