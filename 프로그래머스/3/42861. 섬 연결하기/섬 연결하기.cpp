@@ -7,18 +7,17 @@ using namespace std;
 
 map<int, int> Parent;
 
-void init(int size) {
-    // Parent.resize(size);
-    // int idx = 0;
-    // for(int& i : Parent) i = idx++;
-}
-
 int get_parent(int num) {
     if(Parent.find(num) == Parent.end()) {
         Parent[num] = num;
     }
-    if(Parent[num] == num) return num;
-    return get_parent(Parent[num]);
+    
+    int& p = Parent[num];
+    if(p != num) {
+        p = get_parent(p);
+    }
+    
+    return p;
 }
 
 void connect(int a, int b) {
@@ -51,6 +50,5 @@ int MST_Prim(vector<vector<int>>& costs) {
 }
 
 int solution(int n, vector<vector<int>> costs) {
-    init(n);
     return MST_Prim(costs);
 }
