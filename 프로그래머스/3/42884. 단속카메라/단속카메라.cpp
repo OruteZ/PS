@@ -10,7 +10,7 @@ int solution(vector<vector<int>> routes) {
     });
     
     int answer = 0;
-    int last_cam_pos = -300001;
+    int last_cam_pos = -30001;
     
     for(auto& r : routes) {
         if(r[0] <= last_cam_pos) continue;
