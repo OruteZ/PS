@@ -5,29 +5,8 @@
 
 using namespace std;
 
-int Answer;
-int Capacity;
-int Limit;
-
-int get_available() {
-    return Limit - Capacity;
-}
-
-void board(int num) {
-    if(get_available() >= num) {
-        Capacity += num;
-        return;
-    }
-    
-    //else : new boat
-    Answer++;
-    Capacity = num;
-}
-
 int solution(vector<int> people, int limit) {
-    Limit = limit;
-    Capacity = 0;
-    Answer = 1;
+    int answer = 0;
     
     sort(people.begin(), people.end());
     
@@ -36,18 +15,18 @@ int solution(vector<int> people, int limit) {
         int double_weight = people[l_idx] + people[r_idx];
         int single_weight = people[r_idx];
         
-        if(double_weight <= get_available()) {
+        if(double_weight <= limit) {
             l_idx++;
             r_idx--;
             
-            board(double_weight);
+            answer++;
         }
         
         else {
             r_idx--;
-            board(single_weight);
+            answer++;
         }
     }
     
-    return Answer;
+    return answer;
 }
