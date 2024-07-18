@@ -29,10 +29,12 @@ void connect(int a, int b) {
 }
 
 // returns cost
-int MST_Prim(vector<vector<int>>& costs) {
-    sort(costs.begin(), costs.end(), [](vector<int>& left, vector<int>& right) {
-        return left[2] < right[2];
-    });
+int MST_Kruskal(vector<vector<int>>& costs) {
+    sort(costs.begin(), costs.end(), 
+         
+         [](vector<int>& left, vector<int>& right) {return left[2] < right[2];}
+         
+        );
     
     int result = 0;
     
@@ -50,5 +52,5 @@ int MST_Prim(vector<vector<int>>& costs) {
 }
 
 int solution(int n, vector<vector<int>> costs) {
-    return MST_Prim(costs);
+    return MST_Kruskal(costs);
 }
