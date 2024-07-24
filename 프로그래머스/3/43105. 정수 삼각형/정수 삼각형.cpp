@@ -2,10 +2,11 @@
 #include <vector>
 #include <algorithm>
 
+#define MAX 500
+
 using namespace std;
 typedef long long ll;
 
-#define MAX 500
 ll cache[MAX][MAX] = {0,};
 
 void init() {
@@ -21,6 +22,7 @@ int solution(vector<vector<int>> triangle) {
     
     for(int i = triangle.size() - 1; i >= 0; i--) {
         for(int j = 0; j < i + 1; j++) {
+            
             if(i == triangle.size() - 1) {
                 cache[i][j] = triangle[i][j];
             }
