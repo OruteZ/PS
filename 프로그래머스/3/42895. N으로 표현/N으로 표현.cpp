@@ -1,44 +1,53 @@
-#include <vector>
+#include <iostream>
 #include <unordered_set>
+#include <vector>
+#include <string>
 
 using namespace std;
 
-// DP[i] = i번의 N으로 반들어 낼 수 있는 수의 집합
-vector< unordered_set<int> > DP(8);
+vector<unordered_set<int>> Dp(9); // dp[i]는 N을 i번 사용해서 나타낼 수 있는 모든 수들의 집합
 
-int get_concat_N(int N, int idx) {
-    int result = N;
-    for (int i = 1; i <= idx; i++) {
-        result = result * 10 + N;
+int get_only_N(int N, int size) {
+    int ret = 0;
+    while(size--) {
+        ret = ret * 10 + N;
     }
-
-    return result;
+    
+    return ret;
 }
 
 int solution(int N, int number) {
     if (N == number) return 1;
+    
+    
+    // N, NN, NNN . . . 삽입
+    int num = 0;
+    for (int i = 1; i < 9; i++) {
+        Dp[i].insert(get_only_N(N, i));
+        
+        //방금 넣음
+        if (Dp[i].find(number) != Dp[i].end()) {
+            return i;
+        }
+    }
 
-    DP[0].insert(N);
-
-    for (int k = 1; k < 8; k++) {
-        DP[k].insert(get_concat_N(N, k));
-
-        for (int i = 0; i < k; i++) {
-            int j = k - i - 1; 
-            for (int a : DP[i]) {
-                for (int b : DP[j]) {
-
-                    // 사칙연산
-                    DP[k].insert(a + b);
-                    if (a - b > 0) DP[k].insert(a - b);
-                    DP[k].insert(a * b);
-                    if (a / b > 0) DP[k].insert(a / b);
+    for (int i = 1; i < 9; i++) {
+        for (int j = 1; j < i; j++) {
+            
+            for (int a : Dp[j]) {
+                for (int b : Dp[i - j]) {
+                    Dp[i].insert(a + b);
+                    Dp[i].insert(a - b);
+                    Dp[i].insert(a * b);
+                    if (b != 0) Dp[i].insert(a / b);
                 }
             }
         }
-
-        if (DP[k].find(number)!=DP[k].end())
-            return k + 1;
+        
+        if (Dp[i].find(number) != Dp[i].end()) {
+            return i;
+        }
     }
+    
     return -1;
 }
