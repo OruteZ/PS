@@ -1,6 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <cstring>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -21,6 +19,7 @@ bool dfs(int cow) {
             return true;
         }
     }
+
     return false;
 }
 
