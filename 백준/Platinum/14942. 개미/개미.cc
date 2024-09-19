@@ -4,6 +4,7 @@ using namespace std;
 
 #define LL long long int
 #define MAX_ROOM 100'000
+#define MAX_DEPTH 10'000
 #define DEBUG 0
 
 int RoomCnt;
@@ -16,163 +17,169 @@ vector<vector<int>> SparseCostTable(20, vector<int>(MAX_ROOM + 1));
 
 // DEBUG
 void PrintSparseTable() {
-    for (int i = 0; i < 20; i++) {
-        for (int j = 1; j <= RoomCnt; j++) {
-            cout << SparseTable[i][j] << " ";
-        }
-        cout << endl;
-    }
+	for (int i = 0; i < 20; i++) {
+		for (int j = 1; j <= RoomCnt; j++) {
+			cout << SparseTable[i][j] << " ";
+		}
+		cout << endl;
+	}
 }
 
 void PrintSparseCostTable() {
-    for (int i = 0; i < 20; i++) {
-        for (int j = 1; j <= RoomCnt; j++) {
-            cout << SparseCostTable[i][j] << " ";
-        }
-        cout << endl;
-    }
+	for (int i = 0; i < 20; i++) {
+		for (int j = 1; j <= RoomCnt; j++) {
+			cout << SparseCostTable[i][j] << " ";
+		}
+		cout << endl;
+	}
 }
 // end DEBUG
 
 void Input() {
 
-    cin >> RoomCnt;
-    for (int i = 1; i <= RoomCnt; i++) {
-        cin >> AntEnergy[i];
-    }
+	cin >> RoomCnt;
+	for (int i = 1; i <= RoomCnt; i++) {
+		cin >> AntEnergy[i];
+	}
 
-    for (int i = 1; i < RoomCnt; i++) {
-        int u, v, c;
-        cin >> u >> v >> c;
+	for (int i = 1; i < RoomCnt; i++) {
+		int u, v, c;
+		cin >> u >> v >> c;
 
-        AdjList[u].push_back({v, c});
-        AdjList[v].push_back({u, c});
-    }
+		AdjList[u].push_back({v, c});
+		AdjList[v].push_back({u, c});
+	}
 }
 
 void BuildSparseTable() {
-    // bfs를 통해서 level 0 부모 저장
-    queue<int> q;
-    vector<bool> visited(MAX_ROOM + 1, false);
+	// bfs를 통해서 level 0 부모 저장
+	queue<int> q;
+	vector<bool> visited(MAX_ROOM + 1, false);
 
-    q.push(1);
-    visited[1] = true;
+	q.push(1);
+	visited[1] = true;
 
-    while (not q.empty()) {
-        int cur = q.front();
-        q.pop();
+	while (not q.empty()) {
+		int cur = q.front();
+		q.pop();
 
-        for (auto [child, cost] : AdjList[cur]) {
-            if (!visited[child]) {
+		for (auto [child, cost] : AdjList[cur]) {
+			if (!visited[child]) {
 
-                SparseTable[0][child] = cur;
-                SparseCostTable[0][child] = cost;
+				SparseTable[0][child] = cur;
+				SparseCostTable[0][child] = cost;
 
-                visited[child] = true;
-                q.push(child);
-            }
-        }
-    }
+				visited[child] = true;
+				q.push(child);
+			}
+		}
+	}
 
-    // sparse table 채우기
-    for (int i = 1; i < 20; i++) {
-        for (int j = 1; j <= RoomCnt; j++) {
-            SparseTable[i][j] = SparseTable[i - 1][SparseTable[i - 1][j]];
-        }
-    }
+	// sparse table 채우기
+	for (int i = 1; i < 20; i++) {
+		for (int j = 1; j <= RoomCnt; j++) {
+			int lastParent = SparseTable[i - 1][j];
+			int parentParent = SparseTable[i - 1][lastParent];
+
+			SparseTable[i][j] = parentParent;
+		}
+	}
 }
 
 void BuildSparseCostTable() {
-    for (int i = 1; i < 20; i++) {
-        for (int j = 1; j <= RoomCnt; j++) {
-            int next = SparseTable[i - 1][j];
-            SparseCostTable[i][j] = SparseCostTable[i - 1][j] + SparseCostTable[i - 1][next];
-        }
-    }
+	for (int i = 1; i < 20; i++) {
+		for (int j = 1; j <= RoomCnt; j++) {
+			int parent = SparseTable[i - 1][j];
+			int lastCost = SparseCostTable[i - 1][j];
+			int parentCost = SparseCostTable[i - 1][parent];
+
+			SparseCostTable[i][j] = lastCost + parentCost;
+		}
+	}
 }
 
 LL GetMoveCost(int start, int move_cnt) {
-    LL ret = 0;
+	LL ret = 0;
 
-    // use bitset
-    bitset<20> bit(move_cnt);
+	// use bitset
+	bitset<20> bit(move_cnt);
 
-    for (int i = 0; i < 20; i++) {
-        if (bit[i]) {
-            ret += SparseCostTable[i][start];
-            start = SparseTable[i][start];
-        }
-    }
+	for (int i = 0; i < 20; i++) {
+		if (bit[i]) {
+			ret += SparseCostTable[i][start];
+			start = SparseTable[i][start];
+		}
+	}
 
-    return ret;
+	return ret;
 }
 
 int GetMoveResult(int start, int move_cnt) {
-    int ret = start;
+	int ret = start;
 
-    // use bitset
-    bitset<20> bit(move_cnt);
+	// use bitset
+	bitset<20> bit(move_cnt);
 
-    for (int i = 0; i < 20; i++) {
-        if (bit[i]) {
-            ret = SparseTable[i][ret];
-        }
-    }
+	for (int i = 0; i < 20; i++) {
+		if (bit[i]) {
+			ret = SparseTable[i][ret];
+		}
+	}
 
-    return ret;
+	return ret;
 }
 
 int GetTopResult(int node, LL energy) {
-    int result = node;
+	int result = node;
 
-    for (int move_cnt = 0; move_cnt < MAX_ROOM; move_cnt++) {
-        int result_node = GetMoveResult(node, move_cnt);
-        if (result_node == 0) {
-            break;
-        }
+	for (int move_cnt = 0; move_cnt < MAX_DEPTH; move_cnt++) {
+		int result_node = GetMoveResult(node, move_cnt);
+		if (result_node == 0) {
+			//1번 방 위로 뚫고 올라갔음
+			break;
+		}
 
-        LL cost = GetMoveCost(node, move_cnt);
+		LL cost = GetMoveCost(node, move_cnt);
 
-        if (cost > energy) {
-            break;
-        } else {
-            result = result_node;
-        }
-    }
+		if (cost > energy) {
+			break;
+		} else {
+			result = result_node;
+		}
+	}
 
-    return result;
+	return result;
 }
 
 int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-    cout.tie(0);
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
 
-    Input();
+	Input();
 
-    if (DEBUG) {
-        cout << "finish input" << endl;
-    }
-
-
-    BuildSparseTable();
-
-    BuildSparseCostTable();
+	if (DEBUG) {
+		cout << "finish input" << endl;
+	}
 
 
+	BuildSparseTable();
+	BuildSparseCostTable();
 
-    // DEBUG
-    if(DEBUG) {
-        cout << "Sparse Table" << endl;
-        PrintSparseTable();
-        cout << "Sparse Cost Table" << endl;
-        PrintSparseCostTable();
-    }
-    // end DEBUG
 
-    for(int i = 1; i <= RoomCnt; i++) {
-        cout << GetTopResult(i, AntEnergy[i]) << " ";
-    }
 
-    return 0;
+	// DEBUG
+	if(DEBUG) {
+		cout << "Sparse Table" << endl;
+		PrintSparseTable();
+		cout << "Sparse Cost Table" << endl;
+		PrintSparseCostTable();
+	}
+	// end DEBUG
+
+	for(int i = 1; i <= RoomCnt; i++) {
+		cout << GetTopResult(i, AntEnergy[i]) << " ";
+	}
+
+	return 0;
 }
