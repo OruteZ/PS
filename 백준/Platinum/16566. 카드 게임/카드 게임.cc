@@ -1,30 +1,23 @@
 #include<bits/stdc++.h>
 
 #define MAX 4000000
-#define FASTIO ios::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define FAST_IO ios::sync_with_stdio(false), cin.tie(nullptr), cout.tie(nullptr);
 
 using namespace std;
 
-// Table[i] = 가진 카드 중 i보다 큰 최소의 카드
+// Table[i] = 가진 카드 중 i보다 크거나 같은 최소의 카드
 vector<int> Table;
 int N, M, K;
 
 int get_min_big(int number) {
-    stack<int> s;
+	if(Table[number] == number) {
+		return number;
+	}
 
-    int value = Table[number];
-    while(Table[value] != value) {
-        s.push(value);
-        value = Table[value];
-    }
+	int& next = Table[number];
+	next = get_min_big(next);
 
-    int result = value;
-    while(!s.empty()) {
-        Table[s.top()] = result;
-        s.pop();
-    }
-
-    return result;
+	return next;
 }
 
 void set_table() {
@@ -50,7 +43,7 @@ void set_table() {
 }
 
 int main() {
-    FASTIO;
+    FAST_IO;
 
     cin >> N >> M >> K;
     Table.resize(MAX + 1);
@@ -66,7 +59,7 @@ int main() {
         }
         int card = get_min_big(target);
         Table[card] = get_min_big(card + 1);
-        
+
 
         cout << card << '\n';
     }
