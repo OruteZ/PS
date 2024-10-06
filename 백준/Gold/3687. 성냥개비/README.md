@@ -18,7 +18,7 @@
 
 <p>성냥개비는 숫자를 나타내기에 아주 이상적인 도구이다. 보통 십진수를 성냥개비로 표현하는 방법은 다음과 같다.</p>
 
-<p><img alt="" src="https://www.acmicpc.net/upload/images/match.png" style="height:88px; width:607px"></p>
+<p><img alt="" src="" style="height:88px; width:607px"></p>
 
 <p>성냥개비의 개수가 주어졌을 때, 성냥개비를 모두 사용해서 만들 수 있는 가장 작은 수와 큰 수를 찾는 프로그램을 작성하시오.</p>
 
