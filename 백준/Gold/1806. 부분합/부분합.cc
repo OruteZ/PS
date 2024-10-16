@@ -1,46 +1,49 @@
-#include <iostream>
+#include<bits/stdc++.h>
 
 using namespace std;
 
-int N, S;
-
-int array[100001] = {0,};
-int sums[100001] = {0,};
-int solution(){
-    if(sums[N] < S) return 0;
-
-    int ptr1 = 1, ptr2 = 1;
-    int answer = N+1;
-    while(true){
-       // cout << "ptr1 : " <<ptr1<< " | ptr2 : " << ptr2<<endl;
-
-
-        int sum = sums[ptr2] - sums[ptr1-1];
-
-        if(sum >= S){
-            if(ptr2 - ptr1 + 1 < answer) answer = ptr2 - ptr1 + 1;
-        }
-
-        if(sum <= S){
-            if(++ptr2 > N) break;
-        } else {
-            if(++ptr1 > ptr2) break;
-        }
-    }
-    return answer;
+inline void FAST_IO() {
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
 }
-int main(){
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);std::cout.tie(nullptr);
-
-    cin >> N >> S;
-    for(int i = 1; i <= N; i++){
-        cin >> array[i];
-        sums[i] = sums[i-1] + array[i];
-    }
-
-    cout << solution() << endl;
 
 
-    return 0;
+int getMinLength(vector<int>& arr, int target) {
+	int left = 0; int right = 0;
+	int sum = arr[0];
+
+	int ret = INT_MAX;
+
+	while(right < arr.size() and left <= right) {
+		if(sum >= target) ret = min(ret, right - left + 1);
+
+		if(sum < target) {
+			if(right == arr.size() - 1) {
+				break;
+			}
+			sum += arr[++right];
+		}
+
+		else {
+			if(left == right) {
+				break;
+			}
+			sum -= arr[left++];
+		}
+	}
+
+	return ret == INT_MAX ? 0 : ret;
+}
+
+int main() {
+	FAST_IO();
+	
+	int size; int target;
+	cin >> size >> target;
+
+	vector<int> arr(size);
+	for(int& x : arr) cin >> x;
+
+	cout << getMinLength(arr, target) << endl;
 }
