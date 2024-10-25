@@ -11,23 +11,23 @@ ll countZero(vector<int>& a, vector<int>& b, vector<int>& c, vector<int>& d) {
     ll ret = 0;
 
     // O(n^2)
-    vector<int> possibleSums(a.size() * b.size());
-    vector<int> possibleSums2(c.size() * d.size());
+    vector<int> possible_sums(a.size() * b.size());
+    vector<int> possible_sums2(c.size() * d.size());
     for (int i = 0; i < a.size(); i++) {
         for (int j = 0; j < b.size(); j++) {
-            possibleSums[i * b.size() + j] = a[i] + b[j];
-            possibleSums2[i * b.size() + j] = c[i] + d[j];
+            possible_sums[i * b.size() + j] = a[i] + b[j];
+            possible_sums2[i * b.size() + j] = c[i] + d[j];
         }
     }
-    sort(possibleSums.begin(), possibleSums.end());
-    sort(possibleSums2.begin(), possibleSums2.end());
+    sort(possible_sums.begin(), possible_sums.end());
+    sort(possible_sums2.begin(), possible_sums2.end());
 
 
     
     // O(n^2)
-    for (int i = 0; i < possibleSums.size(); i++) {
-        int target = -possibleSums[i];
-        auto range = equal_range(possibleSums2.begin(), possibleSums2.end(), target);
+    for (int i = 0; i < possible_sums.size(); i++) {
+        int target = -possible_sums[i];
+        auto range = equal_range(possible_sums2.begin(), possible_sums2.end(), target);
         ret += range.second - range.first;
     }
 
