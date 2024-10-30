@@ -1,92 +1,61 @@
-#include <iostream>
-#include <map>
-#include <vector>
-#include <stack>
+#include <bits/stdc++.h>
 
 using namespace std;
-typedef long long int ll;
 
-int N;
-int W;
-vector<pair<int ,int>> points;
-map<pair<int, int>, ll> Dictionary;
+typedef long long ll;
+
+vector<pair<int, int>> positions;
+vector<vector<ll>> dp;
 
 
-int Calculate_distance(pair<int, int> point1, pair<int, int> point2) {
-    return abs(point1.first - point2.first) + abs(point1.second - point2.second);
+int dist(int idx1, int idx2) {
+	return abs(positions[idx1].first - positions[idx2].first) + abs(positions[idx1].second - positions[idx2].second);
 }
 
-ll Recursion(int last_1, int last_2) {
-    //진짜 마지막으로 제거한 사건 = 두 값중 최대값
-    int last_index = last_1 >= last_2 ? last_1 : last_2;
-    if(last_index == points.size()-1) return 0;
+// 각 경찰차들이 마지막으로 위치했던 곳
+ll findMinDistSum(int police1, int police2) {
+	int next = max(police1, police2) + 1;
+	if (next == positions.size()) return 0;
 
-    //memoization
-    if(Dictionary.find(make_pair(last_1, last_2)) != Dictionary.end()) {
-        return Dictionary[make_pair(last_1, last_2)];
-    }
+	if (dp[police1][police2] != -1) return dp[police1][police2];
 
-    pair<int, int> now_case_point = points[last_index+1];
+	ll nextDist = dist(police1, next) + findMinDistSum(next, police2);
+	ll nextDist2 = dist(police2, next) + findMinDistSum(police1, next);
 
-    //case 1 : 1번차가 이동할때
-    ll val1 = Recursion(last_index + 1, last_2);
-    val1 += Calculate_distance(points[last_1], now_case_point);
-
-    //case 2 : 2번차가 이동할 때
-    ll val2 = Recursion(last_1, last_index + 1);
-    val2 += Calculate_distance(points[last_2], now_case_point);
-
-    ll answer;
-    if(val1 <= val2) {
-        answer = val1;
-    }
-    else {
-        answer = val2;
-    }
-    Dictionary[make_pair(last_1, last_2)] = answer;
-
-    return answer;
+	return dp[police1][police2] = min(nextDist, nextDist2);
 }
 
-void Route(int last_1, int last_2) {
-    int last_index = last_1 > last_2 ? last_1 : last_2;
-    if(last_index == W+1) return;
+// dp에 저장된 값에 기반하여, 어떤 경찰차가 갔는지 로그를 추적합니다.
+void trackLog(int police1, int police2) {
+	int next = max(police1, police2) + 1;
+	if (next == positions.size()) return;
 
-    pair<int, int> now_case_point = points[last_index+1];
+	ll nextDist = dist(police1, next) + findMinDistSum(next, police2);
+	ll nextDist2 = dist(police2, next) + findMinDistSum(police1, next);
 
-    ll val1 = Dictionary[make_pair(last_index + 1, last_2)];
-    val1 += Calculate_distance(points[last_1], now_case_point);
+	if (nextDist < nextDist2) {
+		cout << 1 << endl;
+		trackLog(next, police2);
+	} else {
+		cout << 2 << endl;
+		trackLog(police1, next);
+	}
 
-    ll val2 = Dictionary[make_pair(last_1, last_index + 1)];
-    val2 += Calculate_distance(points[last_2], now_case_point);
-
-    if(val1 <= val2) {
-        cout << 1 << '\n';
-        Route(last_index + 1, last_2);
-    } else {
-        cout << 2 << '\n';
-        Route(last_1, last_index + 1);
-    }
 }
 
-int main()
-{
-    ios_base :: sync_with_stdio(false);
-    cin.tie(nullptr);cout.tie(nullptr);
+int main() {
+	int n; cin >> n;
+	int pos_size; cin >> pos_size;
 
-    cin >> N >> W;
-    int a, b;
+	positions.resize(pos_size + 2);
+	dp.resize(pos_size + 2, vector<ll>(pos_size + 2, -1));
 
-    points.emplace_back(1, 1);
-    points.emplace_back(N, N);
-    for(int i = 0; i < W; i++) {
-        cin >> a >> b;
-        points.emplace_back(a, b);
-    }
+	positions[0] = {1, 1};
+	positions[1] = {n, n};
+	for (int i = 2; i < pos_size + 2; i++) {
+		cin >> positions[i].first >> positions[i].second;
+	}
 
-    ll result = Recursion(0, 1);
-    cout << result <<'\n';
-    Route(0,1);
-
-    return 0;
+	cout << findMinDistSum(0, 1) << endl;
+	trackLog(0, 1);
 }
