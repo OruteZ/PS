@@ -1,57 +1,55 @@
-#include <iostream>
-#include<queue>
-#include<cstring>
+#include <bits/stdc++.h>
+
 using namespace std;
 
-long long int dp[100][(1<<10)-1][10];
+typedef long long int ll;
+typedef map<tuple<int, int, int>, ll> dp_t;
 
-long long int TSP(int idx, int visit, int now){
+ll inline MOD(ll n) {
+	return n % 1'000'000'000;
+}
 
-    visit |= (1 << now);
+ll recursion(int idx, int num, bitset<10> used, dp_t& dp) {
+	if(num < 0 or num > 9) {
+		return 0;
+	}
 
-    if(idx == 0 && now == 0) return 0;
+	used.set(num);
 
-    if(visit == (1<<10)-1 && idx == 0) return 1;
-    else if(visit != (1<<10)-1 && idx == 0) return 0;
+	if(idx == 0) {
+		return used.all() ? 1 : 0;
+	}
 
+	if(dp.find({idx, num, used.to_ulong()}) != dp.end()) {
+		return dp[{idx, num, used.to_ulong()}];
+	}
 
+	ll ans =
+		MOD(
+			recursion(idx - 1, num + 1, used, dp) +
+			recursion(idx - 1, num - 1, used, dp)
+		);
 
-    if(dp[idx][visit][now] >= 0) return dp[idx][visit][now];
+	dp[{idx, num, used.to_ulong()}] = ans;
+	return ans;
+}
 
-    long long int result;
-    if(now == 9){
-        result = TSP(idx-1, visit, now-1);
-    } else if (now == 0){
-        result = TSP(idx-1, visit, now+1);
-    } else{
-        result = TSP(idx-1, visit, now-1)+TSP(idx-1, visit, now+1);
-    }
-    result = result % 1000000000;
+ll getStairNums(int n) {
+	dp_t dp;
 
-    dp[idx][visit][now] = result;
+	ll ans = 0;
+	for(int i = 1; i < 10; i++) {
+		bitset<10> used;
+		used.set(i);
+		ans = MOD(ans + recursion(n - 1, i, used, dp));
+	}
 
-    return result;
+	return ans;
 }
 
 int main() {
+	int n;
+	cin >> n;
 
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr); cout.tie(nullptr);
-
-    memset(dp, -1, sizeof(dp));
-
-    int n; cin >> n;
-    /*
-    for(int i = 1; i <= n; i++){
-        cout << uptable[i] << " ";
-    } cout << endl;
-    for(int i = 1; i <= n; i++){
-        cout << reversetable[i] << " ";
-    } cout << endl;
-    */
-    long long int answer = 0;
-    for(int i = 0; i < 10; i++){
-        answer += TSP(n-1, 0, i);
-    }
-    cout << answer % 1000000000 << endl;
+	cout << getStairNums(n) << endl;
 }
