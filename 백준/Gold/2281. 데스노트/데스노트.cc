@@ -5,7 +5,7 @@ static const long long INF = LLONG_MAX;
 
 int n, m;
 vector<long long> lengthArr;
-vector<long long> memo; // 메모이제이션 배열
+vector<long long> memo;
 
 // i번째 이름을 "새 줄의 시작"으로 두었을 때
 // i번째부터 n-1번째 이름까지 배치해 얻을 수 있는
