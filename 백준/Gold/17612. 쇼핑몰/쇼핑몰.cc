@@ -20,10 +20,9 @@ int main() {
 	// { finish_time, -cashier_id, customer_id }
 	priority_queue<
 		tuple<int, int, int>,
-		vector<tuple<int, int, int>>,
+		deque<tuple<int, int, int>>,
 		greater<>
 	> finish_queue;
-
 
 	// init
 	// customers
@@ -34,14 +33,16 @@ int main() {
 	}
 
 	// simulation
-
 	// first k customers
-	for (int cashier_id = 0; cashier_id < k; cashier_id++) {
-		cashiers.emplace(0, cashier_id);
+	for (int i= 0; i < k; i++) {
+		if(i >= n) break;
+		auto [id, duration] = waiting[i];
+		
+		cashiers.emplace(duration, i);
+		finish_queue.emplace(duration, -i, id);
 	}
-
-
-	for (int i = 0; i < n; i++) {
+	
+	for (int i = k; i < n; i++) {
 		auto [id, duration] = waiting[i];
 		auto [last_time, number] = cashiers.top(); cashiers.pop();
 
@@ -49,17 +50,16 @@ int main() {
 		finish_queue.emplace(finish_time, -number, id);
 		cashiers.emplace(finish_time, number);
 	}
+	
+	//=========================================================================
 
 	ll r = 1;
 	ll answer = 0;
 	while (not finish_queue.empty()) {
 		auto [finish_time, cashier_id, customer_id] = finish_queue.top(); finish_queue.pop();
 
-		//cout << finish_time << " " << cashier_id << " " << customer_id << endl;
-
 		answer += (r++) * (ll)customer_id;
 	}
 
 	cout << answer << endl;
-
 }
