@@ -29,11 +29,7 @@ void build_table(int n, int k) {
 
             // target의 경우의 수에 1를 더해줌, key값이 없다면 value를 1로 초기화
             for(auto& p : sum_factors[j]) {
-                auto it = sum_factors[target].find(p.first + 1);
-
-
-                if(it == sum_factors[target].end()) sum_factors[target][p.first + 1] = p.second;
-                else sum_factors[target][p.first + 1] += p.second;
+                sum_factors[target][p.first + 1] += p.second;
             }
         }
 
