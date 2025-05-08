@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 2440 KB, 시간: 84 ms
+메모리: 2436 KB, 시간: 84 ms
 
 ### 분류
 
@@ -12,13 +12,13 @@
 
 ### 제출 일자
 
-2025년 5월 1일 15:21:25
+2025년 5월 8일 22:20:52
 
 ### 문제 설명
 
 <p>그림 1은 어떤 도시의 주요 지점과 그 지점들 간의 이동시간을 나타낸 그래프이다. 그래프의 노드는 주요 지점을 나타내고 두 지점을 연결한 도로(에지)에 표시된 수는 그 도로로 이동할 때 걸리는 분 단위의 시간을 나타낸다. 두 지점 a와 b를 연결하는 도로는 도로(a,b)로 표시한다.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="width: 280px; height: 156px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/9f97f43f-357d-4818-8f7e-47b6a34cc52b/-/preview/" style="width: 280px; height: 156px;"></p>
 
 <p style="text-align: center;">그림 1</p>
 

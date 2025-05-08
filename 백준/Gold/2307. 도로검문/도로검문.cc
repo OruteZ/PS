@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-using ll = long long;
+using ll = int;
 const ll INF = (ll)1e18;
 
 struct Edge {
