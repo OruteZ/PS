@@ -2,47 +2,53 @@
 using namespace std;
 
 using ll = long long;
-using cube = array<int, 3>;
 
 // memoization
 int dp_cut[205][205][205];
 
-int slice_cub(const cube &c) {
-    // 정육면체 처리
-    if(c[0] == c[1] && c[1] == c[2]) {
-        dp_cut[c[0]][c[1]][c[2]] = 0;
+int slice_cub(int a, int b, int c) {
+    // a, b, c를 오름차순으로 정렬: a <= b <= c
+    if(a > b) swap(a, b);
+    if(b > c) swap(b, c);
+    if(a > b) swap(a, b);
+    
+    // 정육면체인 경우
+    if(a == b && b == c) {
+        dp_cut[a][b][c] = 0;
         return 0;
     }
-    if(dp_cut[c[0]][c[1]][c[2]] != -1)
-        return dp_cut[c[0]][c[1]][c[2]];
+    if(dp_cut[a][b][c] != -1)
+        return dp_cut[a][b][c];
     
-   int ans = INT_MAX;
-    for (int i = 1; i <= c[0] / 2; i++) {
-        int left = slice_cub({i, c[1], c[2]});
-        int right = slice_cub({c[0] - i, c[1], c[2]});
+    int ans = INT_MAX;
+    
+    for (int i = 1; i <= a / 2; i++) {
+        int left = slice_cub(i, b, c);
+        int right = slice_cub(a - i, b, c);
         ans = min(ans, left + right + 1);
     }
     
-    for (int i = 1; i <= c[1] / 2; i++) {
-        int front = slice_cub({c[0], i, c[2]});
-        int back = slice_cub({c[0], c[1] - i, c[2]});
+    for (int i = 1; i <= b / 2; i++) {
+        int front = slice_cub(a, i, c);
+        int back = slice_cub(a, b - i, c);
         ans = min(ans, front + back + 1);
     }
     
-    for (int i = 1; i <= c[2] / 2; i++) {
-        int bottom = slice_cub({c[0], c[1], i});
-        int top = slice_cub({c[0], c[1], c[2] - i});
+    for (int i = 1; i <= c / 2; i++) {
+        int bottom = slice_cub(a, b, i);
+        int top = slice_cub(a, b, c - i);
         ans = min(ans, bottom + top + 1);
     }
     
-    dp_cut[c[0]][c[1]][c[2]] = ans;
+    dp_cut[a][b][c] = ans;
     return ans;
 }
 
 void solve() {
-    cube c;
-    cin >> c[0] >> c[1] >> c[2];
-    int result = slice_cub(c);
+    int a, b, c;
+    cin >> a >> b >> c;
+
+    int result = slice_cub(a, b, c);
     cout << result + 1 << '\n';
 }
 
