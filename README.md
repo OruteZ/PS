@@ -24,6 +24,9 @@ PS 문제들을 풀어오면서 학습한 알고리즘 또는 문제 해결법�
 - Prefix Sum
 - Two-pointer
 
+
+- Sparse Table
+
 - Sweeping
 - Segment Tree
 - Backtracking
