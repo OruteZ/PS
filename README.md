@@ -16,7 +16,7 @@ PS 문제들을 풀어오면서 학습한 알고리즘 또는 문제 해결법�
 
 - Shortest Path
   - Dijkstra
-  - 그거 뭐였지 N^3에 모든 정점에서 모든 정점으로의 최단거리
+  - Floyd-warshall
 
 - Dynamic Programming
 - Knapsack
