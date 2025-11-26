@@ -45,7 +45,7 @@ int main() {
                     K--;
                 }
             }
-            if(cur < L - 1 && not visited[next[1]]) {
+            if(cur < L && not visited[next[1]]) {
                 visited[next[1]] = true;
                 q.emplace(next[1]);
 
